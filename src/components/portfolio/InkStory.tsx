@@ -101,13 +101,17 @@ export function InkStory() {
         );
         tl.to(q(".splash"), { autoAlpha: 0, scale: 1.35, duration: 8 }, 29);
         tl.to(q(".particle"), { autoAlpha: 0, scale: 1.4, duration: 7 }, 29);
-        show(".sketches", 38, 10, { scale: 1.08 });
+        show(".s3-text", 34, 7, { y: 30 });
 
-        // 04: arrive at the profile without another series of intermediary screens.
-        hide(".sketches", 54, 6);
-        tl.to(q(".bloom"), { autoAlpha: 0, duration: 7 }, 54);
-        show(".profile", 60, 10, { y: 40 });
-        tl.set({}, {}, 78);
+        // 04: the personal statement gives way to the sketch artwork.
+        hide(".s3-text", 43, 5);
+        show(".sketches", 43, 10, { scale: 1.08 });
+
+        // 05: arrive at the profile without another series of intermediary screens.
+        hide(".sketches", 59, 6);
+        tl.to(q(".bloom"), { autoAlpha: 0, duration: 7 }, 59);
+        show(".profile", 65, 10, { y: 40 });
+        tl.set({}, {}, 83);
       }, wrapper);
 
       cleanup = () => ctx.revert();
@@ -190,6 +194,18 @@ export function InkStory() {
           height={1024}
           className="fx sketches pointer-events-none absolute left-1/2 top-1/2 w-[92%] max-w-3xl -translate-x-1/2 -translate-y-1/2 opacity-0 invert"
         />
+
+        <div className={`fx s3-text ${scene} flex-col items-center text-center opacity-0`}>
+          <h2 className="font-display text-[7vw] font-light leading-tight tracking-[0.12em] text-foreground [text-shadow:0_2px_24px_rgba(0,0,0,0.85)] sm:text-5xl md:text-6xl">
+            {t("EU DESENHO")}
+            <br />
+            {t("EXPERIÊNCIAS.")}
+          </h2>
+          <p className="mt-6 font-display text-[10px] text-spaced text-foreground/85 [text-shadow:0_2px_16px_rgba(0,0,0,0.9)] sm:text-xs">
+            {t("Do conceito")}
+            <br />{t("à realidade.")}
+          </p>
+        </div>
 
         {/* 01 */}
         <div className={`s1 ${scene} flex-col text-center`}>

@@ -2,8 +2,6 @@ import { usePortfolioCopy } from "./Preferences";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
   Github,
   Linkedin,
   Mail,
@@ -94,43 +92,6 @@ export function About() {
 export function Projects() {
   const { t, projects } = usePortfolioCopy();
   const [active, setActive] = useState<number | null>(null);
-  const [activeProject, setActiveProject] = useState(0);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const pointerStartX = useRef<number | null>(null);
-
-  const goToProject = (index: number) => {
-    const nextIndex = Math.min(Math.max(index, 0), projects.length - 1);
-    setActiveProject(nextIndex);
-
-    const area = scrollAreaRef.current;
-    if (!area || projects.length < 2) return;
-
-    const scrollableDistance = Math.max(area.offsetHeight - window.innerHeight, 1);
-    window.scrollTo({
-      top: window.scrollY + area.getBoundingClientRect().top + (nextIndex / (projects.length - 1)) * scrollableDistance,
-      behavior: "smooth",
-    });
-  };
-
-  useEffect(() => {
-    const updateProject = () => {
-      const area = scrollAreaRef.current;
-      if (!area || projects.length < 2) return;
-
-      const rect = area.getBoundingClientRect();
-      const scrollableDistance = Math.max(area.offsetHeight - window.innerHeight, 1);
-      const progress = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1);
-      setActiveProject(Math.min(projects.length - 1, Math.round(progress * (projects.length - 1))));
-    };
-
-    updateProject();
-    window.addEventListener("scroll", updateProject, { passive: true });
-    window.addEventListener("resize", updateProject);
-    return () => {
-      window.removeEventListener("scroll", updateProject);
-      window.removeEventListener("resize", updateProject);
-    };
-  }, [projects.length]);
 
   const selectedProject =
     active !== null ? projects[active] : null;
@@ -145,114 +106,52 @@ export function Projects() {
         )}
       />
 
-      <div
-        ref={scrollAreaRef}
-        className="relative"
-        style={{ minHeight: `${Math.max(projects.length, 1) * 72}vh` }}
-      >
-        <div className="sticky top-20 overflow-hidden py-4 sm:top-24">
-          <div className="mb-4 flex justify-end gap-2 px-1 sm:px-8">
-            <button
-              type="button"
-              onClick={() => goToProject(activeProject - 1)}
-              disabled={activeProject === 0}
-              aria-label={t("Projeto anterior")}
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:border-ink-coral hover:text-ink-coral disabled:cursor-not-allowed disabled:opacity-35"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => goToProject(activeProject + 1)}
-              disabled={activeProject === projects.length - 1}
-              aria-label={t("Próximo projeto")}
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:border-ink-coral hover:text-ink-coral disabled:cursor-not-allowed disabled:opacity-35"
-            >
-              <ChevronRight className="size-4" />
-            </button>
-          </div>
-          <div
-            className="flex cursor-grab select-none touch-pan-y transition-transform duration-700 ease-out active:cursor-grabbing motion-reduce:transition-none"
-            style={{ transform: `translateX(-${activeProject * 100}%)` }}
-            onPointerDown={(event) => {
-              pointerStartX.current = event.clientX;
-              event.currentTarget.setPointerCapture(event.pointerId);
-            }}
-            onPointerUp={(event) => {
-              if (pointerStartX.current === null) return;
-              const distance = event.clientX - pointerStartX.current;
-              pointerStartX.current = null;
-              if (Math.abs(distance) < 50) return;
-              goToProject(activeProject + (distance < 0 ? 1 : -1));
-            }}
-            onPointerCancel={() => { pointerStartX.current = null; }}
+      <div className="grid gap-8 md:grid-cols-2">
+        {projects.map((p, index) => (
+          <article
+            key={p.title}
+            className="group overflow-hidden rounded-xl border border-border bg-card transition-all duration-500 hover:-translate-y-1 hover:border-ink-coral/40"
           >
-            {projects.map((p, index) => {
-              const isCurrent = index === activeProject;
-              return (
-                <div key={p.title} className="w-full shrink-0 px-1 sm:px-8">
-                  <article
-                    className={`group mx-auto max-w-4xl overflow-hidden rounded-xl border bg-card transition-all duration-700 motion-reduce:transition-none md:grid md:grid-cols-[1.1fr_0.9fr] ${
-                      isCurrent
-                        ? "scale-100 border-ink-coral/70 shadow-2xl shadow-ink-coral/10"
-                        : "scale-95 border-border opacity-55"
-                    }`}
-                  >
-                    <div className="overflow-hidden bg-secondary/30">
-                      <img
-                        src={p.image}
-                        alt={`${t("Preview do projeto")} ${p.title}`}
-                        width={1280}
-                        height={800}
-                        loading="lazy"
-                        className="aspect-16/10 h-full w-full object-contain"
-                      />
-                    </div>
-
-                    <div className="p-6 sm:p-8">
-                      <p className="font-mono text-[11px] text-ink-sky">0{index + 1} / 0{projects.length}</p>
-                      <h3 className="mt-3 font-display text-2xl text-foreground">{p.title}</h3>
-                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
-                      <div className="mt-5 flex flex-wrap gap-2">
-                        {p.tags.map((tag) => (
-                          <span key={tag} className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="mt-6 flex gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setActive(index)}
-                          className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-4 py-2 text-xs font-medium text-background transition-transform hover:scale-[1.03]"
-                        >
-                          {t("Ver detalhes")} <ArrowUpRight className="size-3.5" />
-                        </button>
-                        <a
-                          href={p.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-md border border-border px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-ink-sky hover:text-ink-sky"
-                        >
-                          {t("GitHub")} <Github className="size-3.5" />
-                        </a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              );
-            })}
-          </div>
-          <div className="mx-auto mt-7 flex max-w-4xl items-center gap-2 px-1 sm:px-8" aria-label={t("Progresso dos projetos")}>
-            {projects.map((project, index) => (
-              <span
-                key={project.title}
-                className={`h-1 flex-1 rounded-full transition-colors duration-500 ${index === activeProject ? "bg-ink-coral" : "bg-border"}`}
-                aria-hidden="true"
+            <div className="overflow-hidden">
+              <img
+                src={p.image}
+                alt={`${t("Preview do projeto")} ${p.title}`}
+                width={1280}
+                height={800}
+                loading="lazy"
+                className="aspect-16/10 w-full bg-secondary/30 object-contain"
               />
-            ))}
-          </div>
-        </div>
+            </div>
+            <div className="p-6">
+              <h3 className="font-display text-xl text-foreground">{p.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {p.tags.map((tag) => (
+                  <span key={tag} className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-6 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActive(index)}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-4 py-2 text-xs font-medium text-background transition-transform hover:scale-[1.03]"
+                >
+                  {t("Ver detalhes")} <ArrowUpRight className="size-3.5" />
+                </button>
+                <a
+                  href={p.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-border px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-ink-sky hover:text-ink-sky"
+                >
+                  {t("GitHub")} <Github className="size-3.5" />
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
 
       {/* MODAL */}

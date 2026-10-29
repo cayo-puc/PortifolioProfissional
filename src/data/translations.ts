@@ -21,6 +21,54 @@ export const english: Record<string, string> = {
     "A reusable Python data pipeline that integrates data from JSON and CSV files. It reads, standardizes, transforms and consolidates data, preparing it for further use and analysis.",
   [projects[3]!.description]:
     "A REST API built with Java and Spring Boot to manage doctors, with registration, paginated queries, updates and soft deletion. The project uses DTOs, Spring Data JPA, Hibernate and MySQL in an organized layered architecture.",
+  [projects[0]!.details.about]:
+    "Nutri-Soft is a team-built web platform that centralizes nutritional care between professionals and patients. It brings clinical information and follow-up tools together in one place, enabling nutritionists to organize appointments and patients to monitor their progress.",
+  [projects[0]!.details.features![0]!]: "Patient management",
+  [projects[0]!.details.features![1]!]: "Custom clinical forms",
+  [projects[0]!.details.features![2]!]: "Diet and exam records",
+  [projects[0]!.details.features![3]!]: "Physical progress tracking",
+  [projects[0]!.details.features![4]!]: "Appointment scheduling",
+  [projects[0]!.details.features![5]!]: "Clinical dashboard",
+  [projects[0]!.details.features![6]!]: "Virtual assistant",
+  [projects[0]!.details.features![7]!]: "PDF report generation",
+  [projects[0]!.details.contribution!]:
+    "I contributed to the form architecture and application design, as well as the Thymeleaf front end. I also worked on the virtual assistant, appointment scheduling, and deployment process.",
+  [projects[0]!.details.context!]:
+    "Academic team project developed during the Software Engineering program at PUC Minas.",
+  [projects[1]!.details.about]:
+    "A gamified professional portfolio that turns traditional site navigation into an interactive 2D experience. Instead of using conventional menus alone, visitors control a character and explore different scenes to discover projects, experience, personal information, and contact options.",
+  [projects[1]!.details.features![0]!]: "Lateral and depth movement",
+  [projects[1]!.details.features![1]!]: "Jump and gravity system",
+  [projects[1]!.details.features![2]!]: "Collision detection",
+  [projects[1]!.details.features![3]!]: "Scene object interactions",
+  [projects[1]!.details.features![4]!]: "Animated sprites",
+  [projects[1]!.details.features![5]!]: "Obstacles",
+  [projects[1]!.details.features![6]!]: "Navigation across portfolio areas",
+  [projects[1]!.details.development!]:
+    "The interface was built in React with reusable components, while the interaction logic handles movement, physics, character states, and the different elements in each scene.",
+  [projects[1]!.details.objective!]:
+    "The main challenge was exploring a less conventional way to present a portfolio while keeping professional information organized, combining front-end development, interaction logic, and visual direction.",
+  [projects[2]!.details.about]:
+    "A reusable Python data pipeline built to integrate information from different sources and formats. It works with JSON and CSV data, standardizing their structures before consolidating them into a compatible dataset for further processing.",
+  [projects[2]!.details.development!]:
+    "The pipeline reads the files, identifies structural differences, standardizes column names and organization, transforms the data, and consolidates the different sources into a uniform structure.",
+  [projects[2]!.details.objective!]:
+    "The project was created to practice an ETL workflow and build a solution that could be adapted to situations where companies or systems provide data with different structures.",
+  [projects[2]!.details.learnings!]:
+    "Its development involved Python code organization, data manipulation and transformation, handling different input formats, and building a reusable workflow.",
+  [projects[2]!.details.relatedCertificate!]: "Data Pipeline — Alura",
+  [projects[3]!.details.about]:
+    "A REST API built with Java and Spring Boot to manage doctors. The project applies back-end development and layered organization concepts to provide registration, querying, updating, and record deactivation operations.",
+  [projects[3]!.details.features![0]!]: "Doctor registration",
+  [projects[3]!.details.features![1]!]: "Paginated querying",
+  [projects[3]!.details.features![2]!]: "Record updates",
+  [projects[3]!.details.features![3]!]: "Soft deletion",
+  [projects[3]!.details.features![4]!]: "Active doctors list",
+  [projects[3]!.details.architecture!]:
+    "The application uses DTOs for data transfer, Spring Data JPA for persistence access, and Hibernate for object-relational mapping. Listings include only active doctors and use Pageable for pagination.",
+  [projects[3]!.details.objective!]:
+    "The project was created to apply REST API development with the Spring ecosystem, separation of concerns, relational database persistence, and sound application organization practices.",
+  [projects[3]!.details.relatedCertificate!]: "Spring Boot 3 — Alura",
   [experience[0]!.description]:
     "I support students in applying software development concepts, focusing on Java, object-oriented programming, testing, debugging and project development. This role also involves helping students identify errors and understand programming best practices.",
   [education[0]!.details]:
@@ -95,6 +143,17 @@ export const english: Record<string, string> = {
   "Enviando…": "Sending…",
   "Enviar mensagem": "Send message",
   "Ver projeto": "View project",
+  "Ver detalhes": "View details",
+  Tecnologias: "Technologies",
+  "Principais funcionalidades": "Key features",
+  "Minha contribuição": "My contribution",
+  Desenvolvimento: "Development",
+  "Arquitetura e implementação": "Architecture and implementation",
+  Objetivo: "Objective",
+  Aprendizados: "Learnings",
+  Contexto: "Context",
+  "Formação relacionada": "Related education",
+  "Ver código no GitHub": "View code on GitHub",
   "Preview do projeto": "Project preview",
   "Ir para o topo": "Back to top",
   "Abrir menu": "Open menu",
@@ -117,6 +176,7 @@ export const english: Record<string, string> = {
   "Sortear uma música favorita de Caio": "Discover one of Caio's favorite songs",
   "Capa de": "Cover of",
   "Ouvir no Spotify": "Listen on Spotify",
+  "Reproduzir no site": "Play on site",
   "Sortear outra": "Pick another",
   "Descobrir uma música": "Discover a song",
   "Minha seleção de favoritas chega em breve.": "My favorite songs are coming soon.",

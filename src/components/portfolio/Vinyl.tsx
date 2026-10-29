@@ -6,7 +6,7 @@ import { favoriteTracks, getRandomTrack, type FavoriteTrack } from "@/data/music
 import "./vinyl.css";
 
 export function Vinyl() {
-  const { t } = usePortfolioCopy();
+  const { t, theme } = usePortfolioCopy();
   const [track, setTrack] = useState<FavoriteTrack>();
   const [clicked, setClicked] = useState(false);
   const [pulse, setPulse] = useState(0);
@@ -67,18 +67,17 @@ export function Vinyl() {
                 <RotateCw className="size-3" /> {t("Sortear outra")}{" "}
               </button>
             </div>
-            <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card shadow-lg shadow-black/10">
-              <iframe
-                title={`${t("Reproduzir no site")}: ${track.title}`}
-                src={`https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`}
-                width="100%"
-                height="80"
-                frameBorder="0"
-                className="block"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              />
-            </div>
+            <iframe
+              key={`${track.id}-${theme}`}
+              title={`${t("Reproduzir no site")}: ${track.title}`}
+              src={`https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=${theme === "light" ? 1 : 0}`}
+              width="100%"
+              height="152"
+              frameBorder="0"
+              className="mt-5 block rounded-xl"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            />
           </>
         ) : (
           <>

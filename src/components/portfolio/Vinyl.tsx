@@ -67,13 +67,14 @@ export function Vinyl() {
                 <RotateCw className="size-3" /> {t("Sortear outra")}{" "}
               </button>
             </div>
-            <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-lg shadow-black/10">
+            <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card shadow-lg shadow-black/10">
               <iframe
                 title={`${t("Reproduzir no site")}: ${track.title}`}
-                src={`https://open.spotify.com/embed/track/${track.id}?utm_source=generator`}
+                src={`https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`}
                 width="100%"
                 height="80"
                 frameBorder="0"
+                className="block"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"
               />

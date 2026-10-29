@@ -1,5 +1,5 @@
 import { usePortfolioCopy } from "./Preferences";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   Github,
@@ -92,6 +92,28 @@ export function About() {
 export function Projects() {
   const { t, projects } = usePortfolioCopy();
   const [active, setActive] = useState<number | null>(null);
+  const [activeProject, setActiveProject] = useState(0);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateProject = () => {
+      const area = scrollAreaRef.current;
+      if (!area || projects.length < 2) return;
+
+      const rect = area.getBoundingClientRect();
+      const scrollableDistance = Math.max(area.offsetHeight - window.innerHeight, 1);
+      const progress = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1);
+      setActiveProject(Math.min(projects.length - 1, Math.round(progress * (projects.length - 1))));
+    };
+
+    updateProject();
+    window.addEventListener("scroll", updateProject, { passive: true });
+    window.addEventListener("resize", updateProject);
+    return () => {
+      window.removeEventListener("scroll", updateProject);
+      window.removeEventListener("resize", updateProject);
+    };
+  }, [projects.length]);
 
   const selectedProject =
     active !== null ? projects[active] : null;
@@ -106,68 +128,82 @@ export function Projects() {
         )}
       />
 
-      <div className="grid gap-8 md:grid-cols-2">
-        {projects.map((p, index) => (
-          <article
-            key={p.title}
-            className="group overflow-hidden rounded-xl border border-border bg-card transition-all duration-500 hover:-translate-y-1 hover:border-ink-coral/40"
+      <div
+        ref={scrollAreaRef}
+        className="relative"
+        style={{ minHeight: `${Math.max(projects.length, 1) * 72}vh` }}
+      >
+        <div className="sticky top-20 overflow-hidden py-4 sm:top-24">
+          <div
+            className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
+            style={{ transform: `translateX(-${activeProject * 100}%)` }}
           >
-            <div className="overflow-hidden">
-              <img
-                src={p.image}
-                alt={`${t("Preview do projeto")} ${p.title}`}
-                width={1280}
-                height={800}
-                loading="lazy"
-                className="aspect-16/10 w-full object-contain bg-secondary/30"
-              />
-            </div>
-
-            <div className="p-6">
-              <h3 className="font-display text-xl text-foreground">
-                {p.title}
-              </h3>
-
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {p.description}
-              </p>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                {p.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[11px] text-muted-foreground"
+            {projects.map((p, index) => {
+              const isCurrent = index === activeProject;
+              return (
+                <div key={p.title} className="w-full shrink-0 px-1 sm:px-8">
+                  <article
+                    className={`group mx-auto max-w-4xl overflow-hidden rounded-xl border bg-card transition-all duration-700 motion-reduce:transition-none md:grid md:grid-cols-[1.1fr_0.9fr] ${
+                      isCurrent
+                        ? "scale-100 border-ink-coral/70 shadow-2xl shadow-ink-coral/10"
+                        : "scale-95 border-border opacity-55"
+                    }`}
                   >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+                    <div className="overflow-hidden bg-secondary/30">
+                      <img
+                        src={p.image}
+                        alt={`${t("Preview do projeto")} ${p.title}`}
+                        width={1280}
+                        height={800}
+                        loading="lazy"
+                        className="aspect-16/10 h-full w-full object-contain"
+                      />
+                    </div>
 
-              <div className="mt-6 flex gap-3">
-                {/* ABRE O MODAL */}
-                <button
-                  type="button"
-                  onClick={() => setActive(index)}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-4 py-2 text-xs font-medium text-background transition-transform hover:scale-[1.03]"
-                >
-                  {t("Ver detalhes")}
-                  <ArrowUpRight className="size-3.5" />
-                </button>
-
-                {/* ABRE O GITHUB */}
-                <a
-                  href={p.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-md border border-border px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-ink-sky hover:text-ink-sky"
-                >
-                  {t("GitHub")}
-                  <Github className="size-3.5" />
-                </a>
-              </div>
-            </div>
-          </article>
-        ))}
+                    <div className="p-6 sm:p-8">
+                      <p className="font-mono text-[11px] text-ink-sky">0{index + 1} / 0{projects.length}</p>
+                      <h3 className="mt-3 font-display text-2xl text-foreground">{p.title}</h3>
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {p.tags.map((tag) => (
+                          <span key={tag} className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="mt-6 flex gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setActive(index)}
+                          className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-4 py-2 text-xs font-medium text-background transition-transform hover:scale-[1.03]"
+                        >
+                          {t("Ver detalhes")} <ArrowUpRight className="size-3.5" />
+                        </button>
+                        <a
+                          href={p.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-md border border-border px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-ink-sky hover:text-ink-sky"
+                        >
+                          {t("GitHub")} <Github className="size-3.5" />
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mx-auto mt-7 flex max-w-4xl items-center gap-2 px-1 sm:px-8" aria-label={t("Progresso dos projetos")}>
+            {projects.map((project, index) => (
+              <span
+                key={project.title}
+                className={`h-1 flex-1 rounded-full transition-colors duration-500 ${index === activeProject ? "bg-ink-coral" : "bg-border"}`}
+                aria-hidden="true"
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* MODAL */}
@@ -355,6 +391,28 @@ export function Projects() {
 
 export function Experience() {
   const { t, experience } = usePortfolioCopy();
+  const [activeExperience, setActiveExperience] = useState(0);
+  const itemRefs = useRef<Array<HTMLLIElement | null>>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (!visible.length) return;
+        const closest = visible.reduce((current, entry) =>
+          Math.abs(entry.boundingClientRect.top) < Math.abs(current.boundingClientRect.top) ? entry : current,
+        );
+        const index = Number((closest.target as HTMLElement).dataset.index);
+        if (!Number.isNaN(index)) setActiveExperience(index);
+      },
+      { rootMargin: "-35% 0px -45% 0px", threshold: 0 },
+    );
+
+    itemRefs.current.forEach((item) => item && observer.observe(item));
+    return () => observer.disconnect();
+  }, [experience.length]);
+
+  const timelineMarkerTop = itemRefs.current[activeExperience]?.offsetTop ?? 0;
   return (
     <section id="experiencia" className={shell}>
       <SectionHeading
@@ -365,11 +423,21 @@ export function Experience() {
         )}
       />
       <ol className="relative ml-3 space-y-12 border-l border-dashed border-ink-coral/40 pl-8 sm:ml-6">
+        <span
+          className="absolute -left-[9px] top-1 flex size-4 rounded-full border-2 border-background bg-ink-coral shadow-[0_0_0_5px_color-mix(in_oklab,var(--ink-coral),transparent_78%)] transition-all duration-500"
+          style={{ top: `${timelineMarkerTop + 6}px` }}
+          aria-hidden="true"
+        />
         {experience.map((e, i) => (
-          <li key={e.role} className="relative">
+          <li
+            key={e.role}
+            ref={(item) => { itemRefs.current[i] = item; }}
+            data-index={i}
+            className={`relative transition-all duration-500 ${i === activeExperience ? "opacity-100" : "opacity-50"}`}
+          >
             <span
-              className={`absolute -left-[41px] top-1.5 flex size-4 items-center justify-center ${
-                i === 0 ? "rounded-full bg-ink-coral" : "rotate-45 bg-ink-sky/70"
+              className={`absolute -left-[41px] top-1.5 flex size-4 items-center justify-center border-2 border-background transition-all duration-500 ${
+                i === activeExperience ? "scale-125 rounded-full bg-ink-coral" : "rotate-45 bg-ink-sky/70"
               }`}
               aria-hidden
             />

@@ -8,6 +8,36 @@ import { usePortfolioCopy } from "./Preferences";
 
 const scene = "absolute inset-0 flex items-center justify-center px-6 sm:px-10";
 
+function ProjectsPreview() {
+  const { t } = usePortfolioCopy();
+  return (
+    <div className="w-full overflow-hidden rounded-lg border border-border bg-card shadow-2xl">
+      <div className="flex items-center gap-2 border-b border-border/60 px-4 py-3">
+        <span className="size-2 rounded-full bg-ink-coral/70" />
+        <span className="size-2 rounded-full bg-ink-sand/50" />
+        <span className="size-2 rounded-full bg-ink-sky/60" />
+      </div>
+      <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-8">
+        <div className="flex flex-col justify-center gap-4">
+          <h3 className="font-display text-2xl leading-tight text-foreground sm:text-3xl">
+            {t("Projetos que geram resultado.")}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t("Interface, performance e clareza trabalhando juntas.")}
+          </p>
+          <a
+            href="#projetos"
+            className="inline-flex w-fit items-center gap-2 rounded-md bg-foreground px-4 py-2 text-xs font-medium text-background transition-transform hover:scale-[1.03]"
+          >
+            {t("Ver projetos")} <ArrowRight className="size-3" />
+          </a>
+        </div>
+        <div className="aspect-4/3 rounded-md bg-gradient-to-br from-ink-petrol/50 via-secondary to-background" />
+      </div>
+    </div>
+  );
+}
+
 export function InkStory() {
   const { t, profile } = usePortfolioCopy();
   const wrapper = useRef<HTMLDivElement>(null);
@@ -107,11 +137,13 @@ export function InkStory() {
         hide(".s3-text", 43, 5);
         show(".sketches", 43, 10, { scale: 1.08 });
 
-        // 05: arrive at the profile without another series of intermediary screens.
+        // 05: a direct path to the projects, then the profile.
         hide(".sketches", 59, 6);
         tl.to(q(".bloom"), { autoAlpha: 0, duration: 7 }, 59);
-        show(".profile", 65, 10, { y: 40 });
-        tl.set({}, {}, 83);
+        show(".projects-preview", 65, 8, { y: 30, scale: 0.96 });
+        hide(".projects-preview", 78, 5);
+        show(".profile", 84, 10, { y: 40 });
+        tl.set({}, {}, 103);
       }, wrapper);
 
       cleanup = () => ctx.revert();
@@ -126,7 +158,7 @@ export function InkStory() {
   if (reduced) return <StaticStory />;
 
   return (
-    <div ref={wrapper} className="relative h-[460vh]" aria-label="Da arte ao software">
+    <div ref={wrapper} className="relative h-[580vh]" aria-label="Da arte ao software">
       <div className="sticky top-0 h-screen overflow-hidden bg-background">
         {/* ink layers — radial bloom fills the background */}
         <div className="fx bloom pointer-events-none absolute inset-0 opacity-0">
@@ -205,6 +237,12 @@ export function InkStory() {
             {t("Do conceito")}
             <br />{t("à realidade.")}
           </p>
+        </div>
+
+        <div className={`fx projects-preview ${scene} opacity-0`}>
+          <div className="w-full max-w-3xl">
+            <ProjectsPreview />
+          </div>
         </div>
 
         {/* 01 */}

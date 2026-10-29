@@ -2,6 +2,8 @@ import { usePortfolioCopy } from "./Preferences";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
   Github,
   Linkedin,
   Mail,
@@ -94,6 +96,21 @@ export function Projects() {
   const [active, setActive] = useState<number | null>(null);
   const [activeProject, setActiveProject] = useState(0);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const pointerStartX = useRef<number | null>(null);
+
+  const goToProject = (index: number) => {
+    const nextIndex = Math.min(Math.max(index, 0), projects.length - 1);
+    setActiveProject(nextIndex);
+
+    const area = scrollAreaRef.current;
+    if (!area || projects.length < 2) return;
+
+    const scrollableDistance = Math.max(area.offsetHeight - window.innerHeight, 1);
+    window.scrollTo({
+      top: window.scrollY + area.getBoundingClientRect().top + (nextIndex / (projects.length - 1)) * scrollableDistance,
+      behavior: "smooth",
+    });
+  };
 
   useEffect(() => {
     const updateProject = () => {
@@ -134,9 +151,41 @@ export function Projects() {
         style={{ minHeight: `${Math.max(projects.length, 1) * 72}vh` }}
       >
         <div className="sticky top-20 overflow-hidden py-4 sm:top-24">
+          <div className="mb-4 flex justify-end gap-2 px-1 sm:px-8">
+            <button
+              type="button"
+              onClick={() => goToProject(activeProject - 1)}
+              disabled={activeProject === 0}
+              aria-label={t("Projeto anterior")}
+              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:border-ink-coral hover:text-ink-coral disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => goToProject(activeProject + 1)}
+              disabled={activeProject === projects.length - 1}
+              aria-label={t("Próximo projeto")}
+              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:border-ink-coral hover:text-ink-coral disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+          </div>
           <div
-            className="flex transition-transform duration-700 ease-out motion-reduce:transition-none"
+            className="flex cursor-grab select-none touch-pan-y transition-transform duration-700 ease-out active:cursor-grabbing motion-reduce:transition-none"
             style={{ transform: `translateX(-${activeProject * 100}%)` }}
+            onPointerDown={(event) => {
+              pointerStartX.current = event.clientX;
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }}
+            onPointerUp={(event) => {
+              if (pointerStartX.current === null) return;
+              const distance = event.clientX - pointerStartX.current;
+              pointerStartX.current = null;
+              if (Math.abs(distance) < 50) return;
+              goToProject(activeProject + (distance < 0 ? 1 : -1));
+            }}
+            onPointerCancel={() => { pointerStartX.current = null; }}
           >
             {projects.map((p, index) => {
               const isCurrent = index === activeProject;
@@ -555,15 +604,16 @@ export function Certificates() {
           <div className="flex aspect-4/3 items-center justify-center rounded-lg border border-border bg-linear-to-br from-secondary to-background">
             <Award className="size-10 text-ink-sand" />
           </div>
-          <a
-            href={cert?.link ?? "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border px-4 py-2 text-xs text-foreground transition-colors hover:border-ink-sky hover:text-ink-sky"
-          >
-            {" "}
-            {t("Ver certificado")} <ExternalLink className="size-3.5" />
-          </a>
+          {cert?.link && (
+            <a
+              href={cert.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border px-4 py-2 text-xs text-foreground transition-colors hover:border-ink-sky hover:text-ink-sky"
+            >
+              {t("Ver certificado")} <ExternalLink className="size-3.5" />
+            </a>
+          )}
         </DialogContent>
       </Dialog>
     </section>

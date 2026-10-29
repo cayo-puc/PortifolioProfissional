@@ -6,89 +6,6 @@ import sketches from "@/assets/sketches.png";
 import portrait from "@/assets/portrait.png";
 import { usePortfolioCopy } from "./Preferences";
 
-const codeLines = [
-  { text: "const idea = create();", tokens: ["const", "idea", "create"] },
-  { text: "const design = iterate(idea);", tokens: [] },
-  { text: "const experience = build(design);", tokens: [] },
-];
-
-function SideCaption({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <p
-      className={`font-display text-[11px] leading-[2.2] text-spaced text-ink-cream/80 sm:text-xs ${className}`}
-    >
-      {children}
-    </p>
-  );
-}
-
-function CodeBlock() {
-  return (
-    <div className="font-mono text-[11px] leading-loose sm:text-sm md:text-base">
-      <p>
-        <span className="text-ink-sky">const</span> <span className="text-ink-cream">idea</span> ={" "}
-        <span className="text-ink-coral">create</span>
-        <span className="text-muted-foreground">();</span>
-      </p>
-      <p>
-        <span className="text-ink-sky">const</span> <span className="text-ink-cream">design</span> ={" "}
-        <span className="text-ink-coral">iterate</span>
-        <span className="text-muted-foreground">(idea);</span>
-      </p>
-      <p>
-        <span className="text-ink-sky">const</span> <span className="text-ink-cream">experience</span> ={" "}
-        <span className="text-ink-coral">build</span>
-        <span className="text-muted-foreground">(design);</span>
-      </p>
-      <p className="mt-4 text-muted-foreground">// design + code = possibilities</p>
-      <span className="mt-3 inline-block h-4 w-2 animate-pulse bg-ink-sky align-middle" aria-hidden />
-    </div>
-  );
-}
-
-function Wireframe({ polished = false }: { polished?: boolean }) {
-  const { t } = usePortfolioCopy();
-  return (
-    <div
-      className={`w-full overflow-hidden rounded-lg border ${
-        polished ? "border-border bg-card shadow-2xl" : "border-ink-sky/30 bg-background/60"
-      }`}
-    >
-      <div className="flex items-center gap-2 border-b border-border/60 px-4 py-3">
-        <span className="size-2 rounded-full bg-ink-coral/70" />
-        <span className="size-2 rounded-full bg-ink-sand/50" />
-        <span className="size-2 rounded-full bg-ink-sky/60" />
-      </div>
-      {polished ? (
-        <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-8">
-          <div className="flex flex-col justify-center gap-4">
-            <h3 className="font-display text-2xl leading-tight text-foreground sm:text-3xl">
-              {t("Projetos que geram resultado.")}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {t("Interface, performance e clareza trabalhando juntas.")}
-            </p>
-            <span className="inline-flex w-fit items-center gap-2 rounded-md bg-foreground px-4 py-2 text-xs font-medium text-background">
-              {t("Ver projetos")} <ArrowRight className="size-3" />
-            </span>
-          </div>
-          <div className="aspect-4/3 rounded-md bg-gradient-to-br from-ink-petrol/50 via-secondary to-background" />
-        </div>
-      ) : (
-        <div className="grid gap-4 p-6 sm:grid-cols-[1fr_1.3fr]">
-          <div className="space-y-3">
-            <div className="h-3 w-2/3 rounded bg-ink-sky/25" />
-            <div className="h-3 w-full rounded bg-ink-sky/15" />
-            <div className="h-3 w-4/5 rounded bg-ink-sky/15" />
-            <div className="h-8 w-28 rounded bg-ink-sky/20" />
-          </div>
-          <div className="aspect-video rounded border border-dashed border-ink-sky/30" />
-        </div>
-      )}
-    </div>
-  );
-}
-
 const scene = "absolute inset-0 flex items-center justify-center px-6 sm:px-10";
 
 export function InkStory() {
@@ -175,9 +92,7 @@ export function InkStory() {
             20.5,
           );
         });
-        show(".s2-text", 23, 6);
-
-        // 03: the stain blooms radially and fills the background
+        // 03: the stain blooms and reveals the sketch artwork.
         tl.fromTo(
           q(".bloom"),
           { autoAlpha: 0, scale: 0.3 },
@@ -186,41 +101,13 @@ export function InkStory() {
         );
         tl.to(q(".splash"), { autoAlpha: 0, scale: 1.35, duration: 8 }, 29);
         tl.to(q(".particle"), { autoAlpha: 0, scale: 1.4, duration: 7 }, 29);
-        hide(".s2-text", 31, 5);
-        show(".s3-text", 35, 7, { y: 30 });
+        show(".sketches", 38, 10, { scale: 1.08 });
 
-        // 04: sketches over the ink
-        hide(".s3-text", 44, 5);
-        show(".sketches", 44, 8, { scale: 1.08 });
-        show(".s4-text", 46, 6);
-
-        // 05: art turns into code
-        hide(".sketches", 56, 6);
-        hide(".s4-text", 56, 5);
-        tl.to(q(".bloom"), { autoAlpha: 0.2, scale: 1.3, duration: 8 }, 56);
-        show(".code", 57, 7, { y: 30 });
-        show(".s5-text", 58, 6);
-
-        // 06: code becomes a wireframe interface
-        hide(".code", 68, 5);
-        hide(".s5-text", 68, 5);
-        tl.to(q(".bloom"), { autoAlpha: 0, duration: 6 }, 68);
-
-        show(".wire", 69, 7, { y: 30, scale: 0.94 });
-        show(".s6-text", 70, 6);
-
-        // 07: the interface becomes real
-        hide(".wire", 79, 5);
-        hide(".s6-text", 79, 5);
-        show(".real", 80, 7, { y: 30, scale: 0.96 });
-        show(".s7-text", 81, 6);
-
-        // 08: into the personal profile
-        hide(".real", 90, 5);
-        hide(".s7-text", 90, 5);
-        show(".profile", 91, 9, { y: 40 });
-
-        tl.set({}, {}, 100);
+        // 04: arrive at the profile without another series of intermediary screens.
+        hide(".sketches", 54, 6);
+        tl.to(q(".bloom"), { autoAlpha: 0, duration: 7 }, 54);
+        show(".profile", 60, 10, { y: 40 });
+        tl.set({}, {}, 78);
       }, wrapper);
 
       cleanup = () => ctx.revert();
@@ -235,7 +122,7 @@ export function InkStory() {
   if (reduced) return <StaticStory />;
 
   return (
-    <div ref={wrapper} className="relative h-[760vh]" aria-label="Da arte ao software">
+    <div ref={wrapper} className="relative h-[460vh]" aria-label="Da arte ao software">
       <div className="sticky top-0 h-screen overflow-hidden bg-background">
         {/* ink layers — radial bloom fills the background */}
         <div className="fx bloom pointer-events-none absolute inset-0 opacity-0">
@@ -316,96 +203,7 @@ export function InkStory() {
           <div className="mt-12 h-16 w-px bg-linear-to-b from-transparent to-border" />
         </div>
 
-        {/* side captions */}
-        <div className="pointer-events-none absolute inset-y-0 right-6 flex flex-col justify-center sm:right-12">
-          <div className="fx s2-text opacity-0">
-            <SideCaption>
-              {t("Ideias")}
-              <br />
-              {t("também")}
-              <br />
-              {t("deixam")}
-              <br />
-              {t("marcas.")}
-            </SideCaption>
-          </div>
-          <div className="fx s4-text absolute right-0 opacity-0">
-            <SideCaption>
-              Design
-              <br />{t("é onde")}
-              <br />
-              {t("tudo")}
-              <br />
-              {t("começa.")}
-            </SideCaption>
-          </div>
-          <div className="fx s5-text absolute right-0 opacity-0">
-            <SideCaption>
-              {t("E eu")}
-              <br />
-              {t("construo")}
-              <br />{t("o que")}
-              <br />
-              {t("desenho.")}
-            </SideCaption>
-          </div>
-          <div className="fx s6-text absolute right-0 opacity-0">
-            <SideCaption>
-              {t("Ideias")}
-              <br />
-              {t("viram")}
-              <br />
-              {t("produtos.")}
-            </SideCaption>
-          </div>
-          <div className="fx s7-text absolute right-0 opacity-0">
-            <SideCaption>
-              Design
-              <br />
-              {t("Código")}
-              <br />
-              {t("Produto")}
-              <br />
-              {t("Impacto")}
-            </SideCaption>
-          </div>
-        </div>
-
-        {/* 03 */}
-        <div className={`fx s3-text ${scene} flex-col items-center text-center opacity-0`}>
-          <h2 className="font-display text-[7vw] font-light leading-tight tracking-[0.12em] text-foreground [text-shadow:0_2px_24px_rgba(0,0,0,0.85)] sm:text-5xl md:text-6xl">
-            {t("EU DESENHO")}
-            <br />
-            {t("EXPERIÊNCIAS.")}
-          </h2>
-          <p className="mt-6 font-display text-[10px] text-spaced text-foreground/85 [text-shadow:0_2px_16px_rgba(0,0,0,0.9)] sm:text-xs">
-            {t("Do conceito")}
-            <br />{t("à realidade.")}
-          </p>
-        </div>
-
-        {/* 05 */}
-        <div className={`fx code ${scene} opacity-0`}>
-          <div className="w-full max-w-2xl">
-            <CodeBlock />
-          </div>
-        </div>
-
-        {/* 06 */}
-        <div className={`fx wire ${scene} opacity-0`}>
-          <div className="w-full max-w-3xl">
-            <Wireframe />
-          </div>
-        </div>
-
-        {/* 07 */}
-        <div className={`fx real ${scene} opacity-0`}>
-          <div className="w-full max-w-3xl">
-            <Wireframe polished />
-          </div>
-        </div>
-
-        {/* 08 */}
+        {/* 04 */}
         <div className={`fx profile ${scene} opacity-0`}>
           <div className="grid w-full max-w-5xl items-center gap-10 md:grid-cols-2">
             <div>
@@ -456,14 +254,6 @@ export function InkStory() {
 
 function StaticStory() {
   const { t, profile } = usePortfolioCopy();
-  const steps = [
-    { title: t("Ideias também deixam marcas."), body: t("Tudo começa com um impulso — uma gota de tinta.") },
-    { title: t("Eu desenho experiências."), body: t("Do conceito à realidade.") },
-    { title: t("Design é onde tudo começa."), body: t("Sketches, anotações e wireframes antes do código.") },
-    { title: t("E eu construo o que desenho."), body: t("A arte vira código.") },
-    { title: t("Ideias viram produtos."), body: t("O código ganha forma de interface.") },
-    { title: t("Projetos que geram resultado."), body: t("A interface se torna real.") },
-  ];
   return (
     <div className="mx-auto max-w-5xl px-6 pb-24 pt-32">
       <p className="font-display text-[10px] text-spaced text-muted-foreground">{profile.tagline}</p>
@@ -472,16 +262,7 @@ function StaticStory() {
       </h1>
       <p className="mt-4 text-muted-foreground">{profile.role}</p>
       <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground">{profile.intro}</p>
-      <div className="mt-14 grid gap-6 sm:grid-cols-2">
-        {steps.map((s) => (
-          <div key={s.title} className="rounded-lg border border-border bg-card p-6">
-            <h2 className="font-display text-lg text-foreground">{s.title}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
-          </div>
-        ))}
-      </div>
+      <div className="mt-10 h-px w-24 bg-linear-to-r from-ink-coral to-transparent" />
     </div>
   );
 }
-
-export { codeLines };

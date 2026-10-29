@@ -394,6 +394,37 @@ export const certificates = [
         "https://github.com/cayo-puc/ApiVollMed",
     },
   },
+  {
+    title: "Melhor Trabalho Interdisciplinar",
+
+    issuer: "PUC Minas",
+
+    date: "2026",
+
+    description:
+      "Reconhecimento concedido pela PUC Minas ao trabalho interdisciplinar de destaque desenvolvido durante a graduação em Engenharia de Software.",
+
+    skills: [
+      "Trabalho em equipe",
+      "Desenvolvimento de software",
+      "Projeto interdisciplinar",
+    ],
+  },
+  {
+    title: "Digital Safety and Security Awareness",
+
+    issuer: "Cisco",
+
+    date: "2026",
+
+    description:
+      "Certificação da Cisco voltada à conscientização sobre segurança digital e proteção no ambiente online, verificada pela Credly.",
+
+    skills: ["Segurança digital", "Segurança online", "Cisco"],
+
+    link:
+      "https://www.credly.com/badges/4e59d7fe-efe8-4341-80d5-8612bca9ce1f/linked_in_profile",
+  },
 ];
 
 export const navLinks = [
